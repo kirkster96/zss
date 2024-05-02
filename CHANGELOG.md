@@ -2,6 +2,9 @@
 
 All notable changes to the ZSS package will be documented in this file.
 
+## `2.17.0`
+- To enable configuring the number of blocks to be allocated to SLH, belonging to the http server (#701).
+
 ## `2.16.0`
 - Bugfix: AUX should take leap seconds into account in their log messages' timestamp (#690, #691)
 
