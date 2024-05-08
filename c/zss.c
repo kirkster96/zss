@@ -355,25 +355,25 @@ static void setPrivilegedServerName(HttpServer *server, JsonObject *mvdSettings,
 }
 #endif /* __ZOWE_OS_ZOS */
 
-static void setHttpHeapMaxBlocks(HttpServer *server, ConfigManager *configmgr){
+static void sethttpRequestHeapMaxBlocks(HttpServer *server, ConfigManager *configmgr){
 
   int maxBlocks = 0;
-  int getStatus = cfgGetIntC(configmgr,ZSS_CFGNAME,&maxBlocks,3,"components","zss","httpHeapMaxBlocks");
+  int getStatus = cfgGetIntC(configmgr,ZSS_CFGNAME,&maxBlocks,3,"components","zss","httpRequestHeapMaxBlocks");
 
   if (getStatus == ZCFG_SUCCESS){
-    if (maxBlocks > HTTP_HEAP_MAX_BLOCKS){
-      zowelog(NULL, LOG_COMP_ID_MVD_SERVER, ZOWE_LOG_INFO, "httpHeapMaxBlocks out of range, max value is %d\n",HTTP_HEAP_MAX_BLOCKS); 
-      maxBlocks = HTTP_HEAP_MAX_BLOCKS;
-     } else if (maxBlocks < HTTP_HEAP_MIN_BLOCKS){
-      zowelog(NULL, LOG_COMP_ID_MVD_SERVER, ZOWE_LOG_INFO, "httpHeapMaxBlocks out of range, min value is %d\n",HTTP_HEAP_MIN_BLOCKS); 
-      maxBlocks = HTTP_HEAP_MIN_BLOCKS;
+    if (maxBlocks > HTTP_REQUEST_HEAP_MAX_BLOCKS){
+      zowelog(NULL, LOG_COMP_ID_MVD_SERVER, ZOWE_LOG_INFO, "httpRequestHeapMaxBlocks out of range, max value is %d\n", HTTP_REQUEST_HEAP_MAX_BLOCKS); 
+      maxBlocks = HTTP_REQUEST_HEAP_MAX_BLOCKS;
+     } else if (maxBlocks < HTTP_REQUEST_HEAP_MIN_BLOCKS){
+      zowelog(NULL, LOG_COMP_ID_MVD_SERVER, ZOWE_LOG_INFO, "httpRequestHeapMaxBlocks out of range, min value is %d\n", HTTP_REQUEST_HEAP_MIN_BLOCKS); 
+      maxBlocks = HTTP_REQUEST_HEAP_MIN_BLOCKS;
      }
-    zowelog(NULL, LOG_COMP_ID_MVD_SERVER, ZOWE_LOG_INFO, "httpHeapMaxBlocks should be between %d and %d\n",HTTP_HEAP_MIN_BLOCKS,HTTP_HEAP_MAX_BLOCKS);
+    zowelog(NULL, LOG_COMP_ID_MVD_SERVER, ZOWE_LOG_INFO, "httpRequestHeapMaxBlocks should be between %d and %d\n", HTTP_REQUEST_HEAP_MIN_BLOCKS, HTTP_REQUEST_HEAP_MAX_BLOCKS);
   } else{
     zowelog(NULL, LOG_COMP_ID_MVD_SERVER, ZOWE_LOG_INFO, "fallback to default server settings\n");
-    maxBlocks = HTTP_HEAP_DEFAULT_BLOCKS;
+    maxBlocks = HTTP_REQUEST_HEAP_DEFAULT_BLOCKS;
   }
-  server->config->httpHeapMaxBlocks = (unsigned int)maxBlocks;
+  server->config->httpRequestHeapMaxBlocks = (unsigned int)maxBlocks;
 }
 
 static void loadWebServerConfigV2(HttpServer *server, 
@@ -391,7 +391,7 @@ static void loadWebServerConfigV2(HttpServer *server,
   server->config->userTimeouts = htUsers;
   server->config->groupTimeouts = htGroups;
   server->config->defaultTimeout = defaultSessionTimeout;
-  setHttpHeapMaxBlocks(server, configmgr);
+  sethttpRequestHeapMaxBlocks(server, configmgr);
   registerHttpServiceOfLastResort(server,NULL);
 #ifdef __ZOWE_OS_ZOS
   setPrivilegedServerNameV2(server, configmgr);
