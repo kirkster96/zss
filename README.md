@@ -9,7 +9,7 @@ Copyright Contributors to the Zowe Project.
 # ZSS - Zowe System Services Server for enabling low-level microservices for z/OS
 
 ## (Quick start) How to build ZSS and the cross-memory server
-
+Edit `build/zssxlc.cfg` with your STEPLIB information. For example, you might set STEPLIB to 
 ```
 git clone git@github.com:zowe/zss.git
 cd zss
